@@ -7,6 +7,8 @@ import failImg from '@/../public/fail.png';
 import playAgainImg from '@/../public/playagain.png';
 import backImg from '@/../public/back.png';
 
+
+
 export default function GameResultModal({ visible, onClose, resultMessage, onRestart, resultType }) {
   if (!visible) return null
 

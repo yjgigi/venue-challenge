@@ -11,14 +11,14 @@ export default function Card({ card }) {
   const position = card.position // 'admin' or 'player'
 
   // 滑動距離
-  const slideX = position === 'admin' ? -65 : position === 'player' ? 65 : 0
+  const slideX = position === 'admin' ? -48 : position === 'player' ? 48 : 0
 
   return (
     <motion.div
       key={`${card.drawId}-${isBack ? 'back' : 'front'}`}
       initial={isBack ? { x: 0, opacity: 0 } : { x: slideX, opacity: 1 }}
       animate={isBack ? { x: slideX, opacity: 1, transition: { duration: 0.6 } } : { x: slideX, opacity: 1 }}
-      className="relative w-[30vw] max-w-51 aspect-[5/7] perspective sm:w-[20vw] sm:max-w-[180px] md:w-[160px] md:h-[224px]"
+      className="relative w-[30vw] aspect-[5/7] perspective sm:w-[20vw] sm:max-w-[180px] md:w-51 "
     >
       <motion.div
         className="w-full h-full relative"

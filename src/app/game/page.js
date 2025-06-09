@@ -7,8 +7,9 @@ import Image from 'next/image'
 import tableImg from '@/../public/table.png'
 import Card from '@/components/Card'
 import cardBackImg from '@/../public/cardBack.png'
-import { drawCardsAndEvaluate } from '@/lib/gameLogic';
+import { drawCardsAndEvaluate } from '@/lib/gameLogic'
 import playagain2 from '@/../public/playagain2.png';
+
 
 export default function GamePage() {
   const router = useRouter()
@@ -49,11 +50,11 @@ export default function GamePage() {
     setPlayerCard({ ...pCard, showBack: false, drawId, position: 'player' })
     setAdminCard({ ...aCard, showBack: false, drawId, position: 'admin' })
 
-    setPlayerWinCount(updatedWinCount)
-    setPlayerLossCount(updatedLossCount)
-
     setTimeout(() => {
+      setPlayerWinCount(updatedWinCount)
+      setPlayerLossCount(updatedLossCount)
       setResult(result)
+
       if (gameEnded) {
         setFinalResult(finalResult)
         setGameEnded(true)
@@ -76,20 +77,23 @@ export default function GamePage() {
 
   return (
     <div
-      className="min-h-screen max-h-screen overflow-y-auto flex flex-col items-center justify-center p-4 bg-cover bg-center"
+      className="min-h-screen max-h-screen overflow-y-auto flex flex-col items-center justify-center bg-cover bg-center"
       style={{ backgroundImage: `url(${tableImg.src})` }}
     >
       {/* 卡牌區域 */}
-      <div className="flex flex-col md:flex-row gap-6 items-center justify-center w-full max-w-4xl mb-6">
-        {/* 管理員 */}
-        <div className="flex flex-col items-center w-full md:w-1/3 order-1 max-w-51">
-          <div className="text-lg font-semibold mb-2">管理員</div>
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-center w-full mb-6">
+
+        {/* 管理員區塊 */}
+        <div className="relative flex flex-col justify-center items-center w-full md:w-51 max-w-51 order-1 md:order-1">
+          <div className="text-lg font-semibold text-white mb-2 md:mb-0 md:absolute md:-top-8">
+            管理員
+          </div>
           <Card key={adminCard?.drawId} card={adminCard} />
         </div>
 
-        {/* 抽卡區 */}
-        <div className="flex flex-col items-center w-full md:w-1/3 order-2">
-          <div className="mb-2 text-center">點擊卡片抽牌</div>
+        {/* 抽卡區塊 */}
+        <div className="flex flex-col items-center w-full md:w-1/3 order-2 md:order-2">
+          <div className="mb-2 text-center text-white">點擊卡片抽牌</div>
           <div className="w-24 md:w-32 h-auto">
             <Image
               src={cardBackImg}
@@ -100,22 +104,24 @@ export default function GamePage() {
           </div>
         </div>
 
-        {/* 玩家 */}
-        <div className="flex flex-col items-center w-full md:w-1/3 order-3 max-w-51">
-          <div className="text-lg font-semibold mb-2">玩家</div>
+        {/* 玩家區塊 */}
+        <div className="relative flex flex-col justify-center items-center w-full md:w-51 max-w-51 order-3 md:order-3">
+          <div className="text-lg font-semibold text-white mb-2 md:mb-0 md:absolute md:-top-8">
+            玩家
+          </div>
           <Card key={playerCard?.drawId} card={playerCard} />
         </div>
+
       </div>
 
       {/* 勝負資訊 */}
-      <div className="w-full max-w-md text-center">
+      <div className="w-full max-w-md text-center text-white">
         <div className="mt-4">
           玩家勝利次數：{playerWinCount}｜失敗次數：{playerLossCount}
         </div>
-        <div className="mt-2 text-xl text-white min-h-[2.5rem] transition-all duration-300">
+        <div className="mt-2 text-xl min-h-[2.5rem] transition-all duration-600">
           {result}
         </div>
-
       </div>
 
       {/* 結果 Modal */}
@@ -131,22 +137,16 @@ export default function GamePage() {
       />
 
       {/* 再玩一次按鈕 */}
-      {showRestart && gameEnded && (
-        // <button
-        //   onClick={restartGame}
-        //   className="mt-4 px-6 py-2 bg-green-500 text-white rounded-xl shadow hover:bg-green-600 transition"
-        // >
-        //   再玩一次
-        // </button>
-
+      {!modalVisible && showRestart && gameEnded && (
         <div
-        onClick={restartGame}
-        className="relative w-40 cursor-pointer transition-transform hover:scale-105"
+          onClick={restartGame}
+          className="relative w-40 cursor-pointer transition-transform hover:scale-105"
         >
-        <Image src={playagain2} alt='playagain' className='mt-1' />
-        <div className="absolute inset-0 flex items-center justify-center text-black font-bold">再玩一次</div>
+          <Image src={playagain2} alt="playagain" className="mt-1" />
+          <div className="absolute inset-0 flex items-center justify-center text-black font-bold">
+            再玩一次
+          </div>
         </div>
-
       )}
     </div>
   )
