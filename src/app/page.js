@@ -17,7 +17,7 @@ export default function Home() {
           backgroundImage: `url(${coverImg.src})`
         }}
       >
-        <div className=" bg-amber-200/40 p-8 rounded-xl text-center">
+        <div className=" bg-amber-800/40 p-8 rounded-xl text-center">
           <div className="text-5xl font-bold mb-6">場地借用挑戰賽</div>
 
           {/* 兩個按鈕 */}
@@ -44,13 +44,13 @@ export default function Home() {
             onClick={() => setShowModal(false)}
           >
             <div
-              className="relative bg-white rounded-xl shadow-lg w-[30%] p-6 space-y-4 text-gray-800"
+              className="relative bg-white rounded-xl shadow-lg w-[30%] p-6 space-y-4 text-gray-800 min-w-[240px]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* 關閉按鈕 */}
               <button
                 onClick={() => setShowModal(false)}
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl cursor-pointer"
+                className="absolute top-2 right-3 text-gray-500 hover:text-gray-700 text-xl cursor-pointer"
               >
                 ✖
               </button>
@@ -61,7 +61,7 @@ export default function Home() {
                 
                 平手則重抽一回合
               </div>
-              <div className="font-semibold mt-2 text-xl">特殊卡介紹</div>
+              <div className="font-bold mt-2 text-xl">特殊卡介紹</div>
               <div className="text-sm list-disc list-inside text-gray-700">
                 說服成功：玩家直接勝利
                 <br/>

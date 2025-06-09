@@ -46,7 +46,6 @@ export function drawCardsAndEvaluate(playerWinCount, playerLossCount) {
     result = '✅ 玩家勝利！'
     if (updatedWinCount >= 3) {
         finalResult = '🎉 恭喜你成功借到場地！'
-        resultImage = successImg
         gameEnded = true
     }
   } else if (pCard.value < aCard.value) {
@@ -54,7 +53,6 @@ export function drawCardsAndEvaluate(playerWinCount, playerLossCount) {
     result = '❌ 管理員勝利！'
     if (updatedLossCount >= 3) {
       finalResult = '💥借用失敗...'
-      resultImage = failureImg
       gameEnded = true
     }
   } else {

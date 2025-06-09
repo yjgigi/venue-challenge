@@ -4,17 +4,20 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import successImg from '@/../public/success.png';
 import failImg from '@/../public/fail.png';
+import playAgainImg from '@/../public/playagain.png';
+import backImg from '@/../public/back.png';
 
-export default function GameResultModal({ visible, onClose, resultMessage, onRestart }) {
+export default function GameResultModal({ visible, onClose, resultMessage, onRestart, resultType }) {
   if (!visible) return null
 
   let resultImage = null
 
-  if (resultMessage.includes('勝利')) {
+  if (resultType === 'success') {
     resultImage = successImg
-  } else if (resultMessage.includes('失敗')) {
+  } else if (resultType === 'fail') {
     resultImage = failImg
   }
+  
 
 
   const handleBackgroundClick = (e) => {
@@ -55,18 +58,22 @@ export default function GameResultModal({ visible, onClose, resultMessage, onRes
 
         {/* Action buttons */}
         <div className="flex justify-around mt-6">
-          <button
+          <div
             onClick={onRestart}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className= "relative w-40 cursor-pointer transition-transform hover:scale-105"
           >
-            再玩一次
-          </button>
-          <button
-            onClick={() => (window.location.href = 'https://web1132-group1.vercel.app/map')}
-            className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+            <Image src={playAgainImg} alt='playagain' />
+            <div className="absolute inset-0 flex items-center justify-center text-black font-bold">再玩一次</div>
+          </div>
+
+          <div
+            onClick={onRestart}
+            className= "relative w-40 cursor-pointer transition-transform hover:scale-105"
           >
-            回到遊戲地圖
-          </button>
+            <Image src={backImg} alt='back' />
+            <div className="absolute inset-0 flex items-center justify-center text-black font-bold">回到遊戲地圖</div>
+          </div>
+
         </div>
       </div>
     </div>

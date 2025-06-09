@@ -1,15 +1,14 @@
 'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import GameResultModal from '@/components/GameResultModal';
-import Image from 'next/image';
-import tableImg from '@/../public/table.png';
-import Card from '@/components/Card';
-import cardBackImg from '@/../public/cardBack.png';
-import { getRandomCard } from '@/lib/cardPool';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import GameResultModal from '@/components/GameResultModal'
+import Image from 'next/image'
+import tableImg from '@/../public/table.png'
+import Card from '@/components/Card'
+import cardBackImg from '@/../public/cardBack.png'
 import { drawCardsAndEvaluate } from '@/lib/gameLogic';
-
+import playagain2 from '@/../public/playagain2.png';
 
 export default function GamePage() {
   const router = useRouter()
@@ -25,23 +24,42 @@ export default function GamePage() {
   const [showRestart, setShowRestart] = useState(false)
   const [gameEnded, setGameEnded] = useState(false)
 
-  const drawCard = () => {
+  const drawCard = async () => {
+    setPlayerCard(null)
+    setAdminCard(null)
+    setResult('')
+
     const {
-      pCard, aCard, result, finalResult,
-      gameEnded, updatedWinCount, updatedLossCount
+      pCard,
+      aCard,
+      result,
+      finalResult,
+      gameEnded,
+      updatedWinCount,
+      updatedLossCount,
     } = drawCardsAndEvaluate(playerWinCount, playerLossCount)
 
-    setPlayerCard(pCard)
-    setAdminCard(aCard)
-    setResult(result)
+    const drawId = Date.now()
+
+    setPlayerCard({ ...pCard, showBack: true, drawId, position: 'player' })
+    setAdminCard({ ...aCard, showBack: true, drawId, position: 'admin' })
+
+    await new Promise((resolve) => setTimeout(resolve, 600))
+
+    setPlayerCard({ ...pCard, showBack: false, drawId, position: 'player' })
+    setAdminCard({ ...aCard, showBack: false, drawId, position: 'admin' })
+
     setPlayerWinCount(updatedWinCount)
     setPlayerLossCount(updatedLossCount)
 
-    if (gameEnded) {
-      setFinalResult(finalResult)
-      setGameEnded(true)
-      setModalVisible(true)
-    }
+    setTimeout(() => {
+      setResult(result)
+      if (gameEnded) {
+        setFinalResult(finalResult)
+        setGameEnded(true)
+        setModalVisible(true)
+      }
+    }, 1000)
   }
 
   const restartGame = () => {
@@ -56,37 +74,48 @@ export default function GamePage() {
     setGameEnded(false)
   }
 
-
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center p-4 bg-cover bg-center"
+      className="min-h-screen max-h-screen overflow-y-auto flex flex-col items-center justify-center p-4 bg-cover bg-center"
       style={{ backgroundImage: `url(${tableImg.src})` }}
     >
       {/* 卡牌區域 */}
-      <div className="flex gap-10 items-center mb-6">
-        <div>
-          <h2 className="text-lg font-semibold">管理員</h2>
-          <Card card={adminCard} />
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-center w-full max-w-4xl mb-6">
+        {/* 管理員 */}
+        <div className="flex flex-col items-center w-full md:w-1/3 order-1 max-w-51">
+          <div className="text-lg font-semibold mb-2">管理員</div>
+          <Card key={adminCard?.drawId} card={adminCard} />
         </div>
 
-        <div className="p-4 text-center w-51 h-70.5">
-          <p>點擊卡片抽牌</p>
-          <Image 
-            src={cardBackImg} alt='卡背' onClick={drawCard}
-            className="mx-auto cursor-pointer transition-transform duration-300 hover:scale-103 hover:drop-shadow-lg hover: translate-y-1 "
-          />
+        {/* 抽卡區 */}
+        <div className="flex flex-col items-center w-full md:w-1/3 order-2">
+          <div className="mb-2 text-center">點擊卡片抽牌</div>
+          <div className="w-24 md:w-32 h-auto">
+            <Image
+              src={cardBackImg}
+              alt="卡背"
+              onClick={drawCard}
+              className="w-full h-auto cursor-pointer transition-transform duration-300 hover:scale-105 hover:drop-shadow-lg hover:translate-y-1"
+            />
+          </div>
         </div>
 
-        <div>
-          <h2 className="text-lg font-semibold">玩家</h2>
-          <Card card={playerCard} />
+        {/* 玩家 */}
+        <div className="flex flex-col items-center w-full md:w-1/3 order-3 max-w-51">
+          <div className="text-lg font-semibold mb-2">玩家</div>
+          <Card key={playerCard?.drawId} card={playerCard} />
         </div>
       </div>
 
       {/* 勝負資訊 */}
-      <div>
-        <div className="mt-4 text-center">玩家勝利次數：{playerWinCount}｜失敗次數：{playerLossCount}</div>
-        <div className="mt-2 text-xl text-white text-center">{result}</div>
+      <div className="w-full max-w-md text-center">
+        <div className="mt-4">
+          玩家勝利次數：{playerWinCount}｜失敗次數：{playerLossCount}
+        </div>
+        <div className="mt-2 text-xl text-white min-h-[2.5rem] transition-all duration-300">
+          {result}
+        </div>
+
       </div>
 
       {/* 結果 Modal */}
@@ -98,17 +127,26 @@ export default function GamePage() {
         }}
         resultMessage={finalResult}
         onRestart={restartGame}
-     
+        resultType={finalResult.includes('成功') ? 'success' : 'fail'}
       />
 
       {/* 再玩一次按鈕 */}
       {showRestart && gameEnded && (
-        <button
-          onClick={restartGame}
-          className="mt-4 px-6 py-2 bg-green-500 text-white rounded-xl shadow hover:bg-green-600 transition"
+        // <button
+        //   onClick={restartGame}
+        //   className="mt-4 px-6 py-2 bg-green-500 text-white rounded-xl shadow hover:bg-green-600 transition"
+        // >
+        //   再玩一次
+        // </button>
+
+        <div
+        onClick={restartGame}
+        className="relative w-40 cursor-pointer transition-transform hover:scale-105"
         >
-          再玩一次
-        </button>
+        <Image src={playagain2} alt='playagain' className='mt-1' />
+        <div className="absolute inset-0 flex items-center justify-center text-black font-bold">再玩一次</div>
+        </div>
+
       )}
     </div>
   )
